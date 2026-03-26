@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from routes.router_ping import router as router_prueba
 from fastapi.responses import JSONResponse
-
+from app.routes.router_ping import router as router_prueba
 
 
 app = FastAPI()
