@@ -1,0 +1,57 @@
+from click import password_option
+from google import protobuf
+from psycopg import Rollback
+from psycopg2 import connect
+from psycopg2.errors import Error
+import os
+from dotenv import load_dotenv
+from streamlit import user
+
+load_dotenv(".env")
+
+
+
+class PostgresConexion():
+    def __init__(self) :
+        self.host= os.getenv("DATABASE_URL")
+        self.database = os.getenv("PGDATABASE")
+        self.port = os.getenv("PGPORT")
+        self.user = os.getenv("PGUSER")
+        self.password = os.getenv("PGPASSWORD")
+        self.connection = None
+        self.cursor = self.get_cursor()
+        
+    def conexion(self):
+        try:
+            conn = connect(
+                host=self.host,
+                database=self.database,
+                port=self.port,
+                user=self.user,
+                password=self.password
+            )
+            print("conexion exitosa")
+            return conn
+               
+        except Error as e:
+            return None
+        
+        
+    def get_cursor(self):
+        if self.connection:
+            self.cursor = self.connection.cursor()
+            return self.cursor
+        return None
+    
+    def close(self):
+        try:
+            if self.connection:
+                
+                self.connection.close()
+                return True
+            
+        except:
+            return False
+
+postgres =PostgresConexion()
+print(postgres.conexion())
